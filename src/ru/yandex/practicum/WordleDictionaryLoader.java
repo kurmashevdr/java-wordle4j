@@ -24,25 +24,28 @@ public class WordleDictionaryLoader {
 
     public WordleDictionaryLoader(String path) {
         this.path = path;
-        charset = StandardCharsets.UTF_8;
+        this.charset = StandardCharsets.UTF_8;
     }
 
     public WordleDictionary load() throws IOException {
         List<String> words = new LinkedList<>();
-        Path path1 = Paths.get(path);
-        if (Files.exists(path1)) {
-            BufferedReader reader = new BufferedReader(new FileReader(path, charset));
-            while (reader.ready()) {
-                String line = reader.readLine();
-                if (line.length() == 5) {
-                    words.add(line.toLowerCase().trim().replace("ё", "е"));
+        Path file = Paths.get(path);
+        if (Files.exists(file)) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(path, charset))) {
+                while (reader.ready()) {
+                    String line = reader.readLine();
+                    if (line.length() == 5) {
+                        words.add(WordleDictionary.wordNormalization(line));
+                    }
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         } else {
-            throw new FileNotFoundException(String.format("Словарь %s не найден!", path1.getFileName().toString()));
+            throw new FileNotFoundException(String.format("Словарь %s не найден!", file.getFileName().toString()));
         }
         if (words.isEmpty()) {
-            throw new WordleDictionaryIsEmpty(String.format("Словарь %s пуст", path1.getFileName().toString()));
+            throw new WordleDictionaryIsEmpty(String.format("Словарь %s пуст", file.getFileName().toString()));
         }
         return new WordleDictionary(words);
     }

@@ -2,7 +2,6 @@ package ru.yandex.practicum;
 
 import ru.yandex.practicum.exception.LimitStepsException;
 import ru.yandex.practicum.exception.WordNotFoundInDictionary;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,11 +21,12 @@ import java.util.Scanner;
  */
 public class Wordle {
     private static final LocalDateTime time = LocalDateTime.now();
+    private static final int MAX_WORD_LENGTH = 5;
+    private static final int REPEAT_COUNT_5 = 5;
 
     public static void main(String[] args) {
         WordleDictionaryLoader loader = new WordleDictionaryLoader("words_ru.txt");
-        try {
-            Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
             boolean running = true;
             while (running) {
                 printMenu();
@@ -38,12 +38,12 @@ public class Wordle {
                         WordleGame wordleGame = new WordleGame(dictionary);
                         while (!wordleGame.isOver()) {
                             System.out.print("Введите слово из 5 букв или нажмите Enter, чтобы получить подсказку: ");
-                            String word = scanner.nextLine().toLowerCase().replace("ё", "е");
+                            String word = WordleDictionary.wordNormalization(scanner.nextLine());
                             if (word.isEmpty()) {
                                 word = wordleGame.hint();
                                 System.out.println(word);
                             }
-                            if (word.length() != 5) {
+                            if (word.length() != MAX_WORD_LENGTH) {
                                 continue;
                             }
                             try {
@@ -70,7 +70,7 @@ public class Wordle {
     }
 
     public static void printMenu() {
-        System.out.println("-".repeat(5) + "Меню" + "-".repeat(5));
+        System.out.println("-".repeat(REPEAT_COUNT_5) + "Меню" + "-".repeat(REPEAT_COUNT_5));
         System.out.println("1. Начать игру");
         System.out.println("2. Вывести правила игры");
         System.out.println("3. Выход");
@@ -78,7 +78,7 @@ public class Wordle {
     }
 
     public static void printRules() {
-        System.out.println("-".repeat(5) + "Правила" + "-".repeat(5));
+        System.out.println("-".repeat(REPEAT_COUNT_5) + "Правила" + "-".repeat(REPEAT_COUNT_5));
         System.out.println("1. Длина вводимого слова ровно 5 букв");
         System.out.println("2. Буква ё автоматически конвертируется в е");
         System.out.println("3. На то, чтобы угадать слово у вас есть 6 попыток");
@@ -104,12 +104,12 @@ public class Wordle {
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToLogsFile.toString(),
                 StandardCharsets.UTF_8, true))) {
-            writer.write("-".repeat(5) + "\n");
+            writer.write("-".repeat(REPEAT_COUNT_5) + "\n");
             writer.write(e.getMessage() + "\n");
             for (StackTraceElement element : e.getStackTrace()) {
                 writer.write(element.toString() + "\n");
             }
-            writer.write("-".repeat(5) + "\n");
+            writer.write("-".repeat(REPEAT_COUNT_5) + "\n");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

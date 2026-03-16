@@ -26,40 +26,47 @@ public class WordleGame {
     private boolean gameOver;
     private List<String> answers;
     private List<String> dictionaryWithHints;
+    private static final int MAX_STEPS_COUNT = 6;
+    private static final int NUMBER_LAST_ANSWER_FROM_THE_END = 2;
+    private static final char CHAR_NOT_FOUND_IN_WORD = '-';
+    private static final char CHAR_FOUND_IN_WORD = '^';
+    private static final char CORRECT_CHAR_IN_WORD_POSITION = '+';
 
     public WordleGame(WordleDictionary dictionary) {
         this.dictionary = dictionary;
-        dictionaryWithHints = new LinkedList<>(dictionary.getWords());
-        currentWord = dictionary.getWord();
-        steps = 0;
-        gameOver = false;
-        answers = new LinkedList<>();
+        this.dictionaryWithHints = new LinkedList<>(dictionary.getWords());
+        this.currentWord = dictionary.getWord();
+        this.steps = 0;
+        this.gameOver = false;
+        this.answers = new LinkedList<>();
     }
 
     public WordleGame(WordleDictionary dictionary, String currentWord) {
         this.dictionary = dictionary;
-        dictionaryWithHints = new LinkedList<>(dictionary.getWords());
+        this.dictionaryWithHints = new LinkedList<>(dictionary.getWords());
         this.currentWord = currentWord;
-        steps = 0;
-        gameOver = false;
-        answers = new LinkedList<>();
+        this.steps = 0;
+        this.gameOver = false;
+        this.answers = new LinkedList<>();
     }
 
     public String hint() {
         if (answers.isEmpty()) {
             return dictionary.getWord();
         }
-        String lastAnswer = answers.get(answers.size() - 2);
+        String lastAnswer = answers.get(answers.size() - NUMBER_LAST_ANSWER_FROM_THE_END);
         String resultCheckAnswer = answers.getLast();
         for (int i = 0; i < resultCheckAnswer.length(); i++) {
             for (String hint : dictionary.getWords()) {
-                if (resultCheckAnswer.charAt(i) == '-' && hint.contains(lastAnswer.substring(i, i + 1))) {
+                boolean hintContainsChar = hint.contains(lastAnswer.substring(i, i + 1));
+                if (resultCheckAnswer.charAt(i) == CHAR_NOT_FOUND_IN_WORD && hintContainsChar) {
                     dictionaryWithHints.remove(hint);
                 }
-                if (resultCheckAnswer.charAt(i) == '^' && !hint.contains(lastAnswer.substring(i, i + 1))) {
+                if (resultCheckAnswer.charAt(i) == CHAR_FOUND_IN_WORD && !hintContainsChar) {
                     dictionaryWithHints.remove(hint);
                 }
-                if (resultCheckAnswer.charAt(i) == '+' && lastAnswer.charAt(i) != hint.charAt(i)) {
+                if (resultCheckAnswer.charAt(i) == CORRECT_CHAR_IN_WORD_POSITION
+                        && lastAnswer.charAt(i) != hint.charAt(i)) {
                     dictionaryWithHints.remove(hint);
                 }
             }
@@ -72,26 +79,26 @@ public class WordleGame {
             throw new WordNotFoundInDictionary("Такого слова нет в словаре");
         }
         steps++;
-        if (steps > 6) {
+        if (steps > MAX_STEPS_COUNT) {
             gameOver = true;
             throw new LimitStepsException("У вас закончились попытки");
         }
         answers.add(word);
         if (word.equals(currentWord)) {
             gameOver = true;
-            return "+++++";
+            return ("" + CORRECT_CHAR_IN_WORD_POSITION).repeat(5);
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
             if (currentWord.charAt(i) == word.charAt(i)) {
-                sb.append("+");
+                sb.append(CORRECT_CHAR_IN_WORD_POSITION);
                 continue;
             }
             boolean containsChar = currentWord.contains(word.substring(i, i + 1));
             if (containsChar) {
-                sb.append("^");
+                sb.append(CHAR_FOUND_IN_WORD);
             } else {
-                sb.append("-");
+                sb.append(CHAR_NOT_FOUND_IN_WORD);
             }
         }
         answers.add(sb.toString());
