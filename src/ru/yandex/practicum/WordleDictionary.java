@@ -15,7 +15,7 @@ public class WordleDictionary {
 
     public WordleDictionary(List<String> words) {
         this.words = words;
-        random = new Random();
+        this.random = new Random();
     }
 
     public String getWord() {
@@ -28,6 +28,10 @@ public class WordleDictionary {
 
     public boolean contains(String word) {
         return words.contains(word);
+    }
+
+    public static String wordNormalization(String word) {
+        return word.toLowerCase().trim().replace("ё", "е");
     }
 
 }
