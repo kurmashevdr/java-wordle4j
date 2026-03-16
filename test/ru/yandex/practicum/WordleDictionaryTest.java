@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.exception.WordNotFoundInDictionary;
-
 import java.io.IOException;
 
 public class WordleDictionaryTest {

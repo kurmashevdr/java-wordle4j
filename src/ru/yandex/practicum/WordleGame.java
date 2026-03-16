@@ -2,7 +2,6 @@ package ru.yandex.practicum;
 
 import ru.yandex.practicum.exception.LimitStepsException;
 import ru.yandex.practicum.exception.WordNotFoundInDictionary;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;

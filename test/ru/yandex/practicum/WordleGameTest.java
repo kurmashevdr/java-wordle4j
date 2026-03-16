@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.exception.LimitStepsException;
-import ru.yandex.practicum.exception.WordleDictionaryIsEmpty;
-
 import java.io.IOException;
 
 class WordleGameTest {
