@@ -38,7 +38,7 @@ public class Wordle {
                         WordleGame wordleGame = new WordleGame(dictionary);
                         while (!wordleGame.isOver()) {
                             System.out.print("Введите слово из 5 букв или нажмите Enter, чтобы получить подсказку: ");
-                            String word = WordleDictionary.wordNormalization(scanner.nextLine());
+                            String word = WordleDictionary.normalizeWord(scanner.nextLine());
                             if (word.isEmpty()) {
                                 word = wordleGame.hint();
                                 System.out.println(word);

@@ -35,7 +35,7 @@ public class WordleDictionaryLoader {
                 while (reader.ready()) {
                     String line = reader.readLine();
                     if (line.length() == 5) {
-                        words.add(WordleDictionary.wordNormalization(line));
+                        words.add(WordleDictionary.normalizeWord(line));
                     }
                 }
             } catch (IOException e) {

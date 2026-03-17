@@ -30,7 +30,10 @@ public class WordleDictionary {
         return words.contains(word);
     }
 
-    public static String wordNormalization(String word) {
+    public static String normalizeWord(String word) {
+        if (word == null || word.isEmpty()) {
+            return word;
+        }
         return word.toLowerCase().trim().replace("ё", "е");
     }
 
